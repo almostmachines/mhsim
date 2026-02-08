@@ -84,6 +84,8 @@ export function SceneRoot({ state }: SceneRootProps) {
         <PointCloud
           burnInSamples={state.burnInSamples}
           acceptedSamples={state.acceptedSamples}
+          maxBurnIn={state.config.burnInSamples}
+          maxAccepted={state.config.totalSamples}
           bounds={bounds}
         />
 

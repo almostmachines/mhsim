@@ -7,14 +7,14 @@ import { normalize } from './SceneRoot';
 interface PointCloudProps {
   burnInSamples: SampleRecord[];
   acceptedSamples: SampleRecord[];
+  maxBurnIn: number;
+  maxAccepted: number;
   bounds: {
     slope: [number, number];
     intercept: [number, number];
     sigma: [number, number];
   };
 }
-
-const MAX_POINTS = 2000;
 const tempObject = new THREE.Object3D();
 const tempColor = new THREE.Color();
 const colorBlue = new THREE.Color('#3b82f6');
@@ -23,6 +23,8 @@ const colorPurple = new THREE.Color('#a855f7');
 export function PointCloud({
   burnInSamples,
   acceptedSamples,
+  maxBurnIn,
+  maxAccepted,
   bounds,
 }: PointCloudProps) {
   const burnInRef = useRef<THREE.InstancedMesh>(null);
@@ -84,15 +86,17 @@ export function PointCloud({
   return (
     <>
       <instancedMesh
+        key={`burn-${maxBurnIn}`}
         ref={burnInRef}
-        args={[sphereGeom, undefined, MAX_POINTS]}
+        args={[sphereGeom, undefined, maxBurnIn]}
         frustumCulled={false}
       >
         <meshStandardMaterial transparent opacity={0.4} />
       </instancedMesh>
       <instancedMesh
+        key={`accepted-${maxAccepted}`}
         ref={acceptedRef}
-        args={[sphereGeom, undefined, MAX_POINTS]}
+        args={[sphereGeom, undefined, maxAccepted]}
         frustumCulled={false}
       >
         <meshStandardMaterial transparent opacity={0.85} />
