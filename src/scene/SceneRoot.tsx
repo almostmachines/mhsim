@@ -18,7 +18,7 @@ export function SceneRoot({ state }: SceneRootProps) {
   const bounds = useMemo(() => computeBounds(state), [state]);
 
   return (
-    <div className="relative flex-1 min-h-0">
+    <div className="relative min-h-[60vh] md:min-h-0 md:flex-1">
       <Canvas
         camera={{ position: [15, 12, 15], fov: 50, near: 0.1, far: 200 }}
         style={{ background: '#0f172a' }}

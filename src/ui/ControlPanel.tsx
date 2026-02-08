@@ -60,7 +60,7 @@ export function ControlPanel({
   }, [state.acceptedSamples]);
 
   return (
-    <div className="w-[340px] shrink-0 bg-slate-800/50 border-l border-slate-700 flex flex-col overflow-y-auto">
+    <div className="w-full md:w-[340px] shrink-0 bg-slate-800/50 border-t md:border-t-0 md:border-l border-slate-700 flex flex-col overflow-y-auto">
       <div className="p-4 space-y-4">
         <StepControls
           phase={state.phase}
