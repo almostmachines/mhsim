@@ -1,4 +1,4 @@
-# Metropolis-Hastings Algorithm Explorer
+# Metropolis-Hastings Linear Regression
 
 An interactive 3D visualization of the Metropolis-Hastings algorithm applied to Bayesian linear regression. Watch the posterior distribution being constructed one sample at a time, see proposals accepted or rejected, and observe the chain converge to the true mode.
 
