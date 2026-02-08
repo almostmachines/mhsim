@@ -22,8 +22,8 @@ function NumberInput({
   min?: number;
 }) {
   return (
-    <div className="flex items-center justify-between gap-2">
-      <label className="text-xs text-slate-400 shrink-0">{label}</label>
+    <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+      <label className="text-xs text-slate-400 truncate">{label}</label>
       <input
         type="number"
         value={value}
@@ -31,7 +31,7 @@ function NumberInput({
         min={min}
         onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
         disabled={disabled}
-        className="w-20 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-200 text-right disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-cyan-500"
+        className="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-200 text-right disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-cyan-500"
       />
     </div>
   );
@@ -75,7 +75,7 @@ export function ParameterInputs({
         />
       </Section>
 
-      <Section title="Evidence">
+      <Section title="Evidence" className="w-1/2">
         <NumberInput
           label="Data points"
           value={config.dataPoints}
@@ -172,16 +172,18 @@ export function ParameterInputs({
 function Section({
   title,
   children,
+  className,
 }: {
   title: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div>
+    <div className={className}>
       <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
         {title}
       </h3>
-      <div className="space-y-1">{children}</div>
+      <div className="flex gap-2">{children}</div>
     </div>
   );
 }
