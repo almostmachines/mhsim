@@ -47,33 +47,6 @@ export function ParameterInputs({
 
   return (
     <div className="space-y-3">
-      <Section title="Sampling">
-        <NumberInput
-          label="Total samples"
-          value={config.totalSamples}
-          onChange={(v) => update({ totalSamples: Math.max(1, Math.round(v)) })}
-          disabled={disabled}
-          step={50}
-          min={1}
-        />
-        <NumberInput
-          label="Burn-in"
-          value={config.burnInSamples}
-          onChange={(v) => update({ burnInSamples: Math.max(0, Math.round(v)) })}
-          disabled={disabled}
-          step={10}
-          min={0}
-        />
-        <NumberInput
-          label="Data points"
-          value={config.dataPoints}
-          onChange={(v) => update({ dataPoints: Math.max(1, Math.round(v)) })}
-          disabled={disabled}
-          step={5}
-          min={1}
-        />
-      </Section>
-
       <Section title="True Values">
         <NumberInput
           label="Slope"
@@ -102,7 +75,18 @@ export function ParameterInputs({
         />
       </Section>
 
-      <Section title="Starting Point (Prior)">
+      <Section title="Evidence">
+        <NumberInput
+          label="Data points"
+          value={config.dataPoints}
+          onChange={(v) => update({ dataPoints: Math.max(1, Math.round(v)) })}
+          disabled={disabled}
+          step={5}
+          min={1}
+        />
+      </Section>
+
+      <Section title="Prior Belief">
         <NumberInput
           label="Slope"
           value={config.priorParams.slope}
@@ -161,6 +145,26 @@ export function ParameterInputs({
           min={0.01}
         />
       </Section>
+
+      <Section title="Posterior Sampling">
+        <NumberInput
+          label="Total samples"
+          value={config.totalSamples}
+          onChange={(v) => update({ totalSamples: Math.max(1, Math.round(v)) })}
+          disabled={disabled}
+          step={50}
+          min={1}
+        />
+        <NumberInput
+          label="Burn-in"
+          value={config.burnInSamples}
+          onChange={(v) => update({ burnInSamples: Math.max(0, Math.round(v)) })}
+          disabled={disabled}
+          step={10}
+          min={0}
+        />
+      </Section>
+
     </div>
   );
 }
