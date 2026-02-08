@@ -106,6 +106,7 @@ export function algorithmReducer(
       const accepted = u < alpha;
       const newParams = accepted ? state.stepResult.proposed : state.currentParams;
 
+      const isBurn = isInBurnIn(state);
       const samples = addSample(state, newParams);
       const newTotal = samples.burnInSamples.length + samples.acceptedSamples.length;
       const completed = newTotal >= targetTotal(state);
@@ -134,8 +135,8 @@ export function algorithmReducer(
         proposedParams: null,
         stepResult,
         ...samples,
-        totalSteps: state.totalSteps + 1,
-        acceptedCount: state.acceptedCount + (accepted ? 1 : 0),
+        totalSteps: state.totalSteps + (isBurn ? 0 : 1),
+        acceptedCount: state.acceptedCount + (!isBurn && accepted ? 1 : 0),
         statusMessage: completed ? 'Sampling complete! ' + msg : msg,
         statusType: completed ? 'success' : msgType,
       };
@@ -180,10 +181,12 @@ export function algorithmReducer(
 
         const result = step(current, state.data, state.config.proposalWidths);
         current = result.newParams;
-        totalSteps++;
-        if (result.accepted) acceptedCount++;
 
         const isBurn = burnIn.length < state.config.burnInSamples;
+        if (!isBurn) {
+          totalSteps++;
+          if (result.accepted) acceptedCount++;
+        }
         const record: SampleRecord = { params: { ...current }, isBurnIn: isBurn };
         if (isBurn) {
           burnIn = [...burnIn, record];
