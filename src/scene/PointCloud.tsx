@@ -1,0 +1,102 @@
+import { useRef, useEffect, useMemo } from 'react';
+import * as THREE from 'three';
+import type { SampleRecord } from '../state/types';
+import type { Params } from '../types';
+import { normalize } from './SceneRoot';
+
+interface PointCloudProps {
+  burnInSamples: SampleRecord[];
+  acceptedSamples: SampleRecord[];
+  bounds: {
+    slope: [number, number];
+    intercept: [number, number];
+    sigma: [number, number];
+  };
+}
+
+const MAX_POINTS = 2000;
+const tempObject = new THREE.Object3D();
+const tempColor = new THREE.Color();
+const colorBlue = new THREE.Color('#3b82f6');
+const colorPurple = new THREE.Color('#a855f7');
+
+export function PointCloud({
+  burnInSamples,
+  acceptedSamples,
+  bounds,
+}: PointCloudProps) {
+  const burnInRef = useRef<THREE.InstancedMesh>(null);
+  const acceptedRef = useRef<THREE.InstancedMesh>(null);
+
+  const toPos = (p: Params): [number, number, number] => [
+    normalize(p.slope, bounds.slope),
+    normalize(p.intercept, bounds.intercept),
+    normalize(p.sigma, bounds.sigma),
+  ];
+
+  // Update burn-in instances
+  useEffect(() => {
+    if (!burnInRef.current) return;
+    const mesh = burnInRef.current;
+
+    for (let i = 0; i < burnInSamples.length; i++) {
+      const [x, y, z] = toPos(burnInSamples[i].params);
+      tempObject.position.set(x, y, z);
+      tempObject.scale.setScalar(1);
+      tempObject.updateMatrix();
+      mesh.setMatrixAt(i, tempObject.matrix);
+      mesh.setColorAt(i, tempColor.set('#64748b'));
+    }
+
+    mesh.count = burnInSamples.length;
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  }, [burnInSamples, bounds]);
+
+  // Update accepted instances with blue-to-purple gradient
+  useEffect(() => {
+    if (!acceptedRef.current) return;
+    const mesh = acceptedRef.current;
+    const total = acceptedSamples.length;
+
+    for (let i = 0; i < total; i++) {
+      const [x, y, z] = toPos(acceptedSamples[i].params);
+      tempObject.position.set(x, y, z);
+      tempObject.scale.setScalar(1);
+      tempObject.updateMatrix();
+      mesh.setMatrixAt(i, tempObject.matrix);
+
+      const t = total > 1 ? i / (total - 1) : 0;
+      tempColor.lerpColors(colorBlue, colorPurple, t);
+      mesh.setColorAt(i, tempColor);
+    }
+
+    mesh.count = total;
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  }, [acceptedSamples, bounds]);
+
+  const sphereGeom = useMemo(
+    () => new THREE.SphereGeometry(0.08, 8, 8),
+    [],
+  );
+
+  return (
+    <>
+      <instancedMesh
+        ref={burnInRef}
+        args={[sphereGeom, undefined, MAX_POINTS]}
+        frustumCulled={false}
+      >
+        <meshStandardMaterial transparent opacity={0.4} />
+      </instancedMesh>
+      <instancedMesh
+        ref={acceptedRef}
+        args={[sphereGeom, undefined, MAX_POINTS]}
+        frustumCulled={false}
+      >
+        <meshStandardMaterial transparent opacity={0.85} />
+      </instancedMesh>
+    </>
+  );
+}
