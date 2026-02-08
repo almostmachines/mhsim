@@ -1,16 +1,18 @@
 import type { AlgorithmState, AlgorithmAction, SampleRecord } from './types';
 import type { AlgorithmConfig, Params } from '../types';
 import { generateData } from '../engine/data-generator';
-import { propose, acceptanceProbability, step } from '../engine/metropolis';
+import { propose, acceptanceProbability, logAcceptanceRatio, step } from '../engine/metropolis';
 import { logPosterior } from '../engine/model';
+import { sanitizeAlgorithmConfig } from '../config/sanitize';
 
 export function createInitialState(config: AlgorithmConfig): AlgorithmState {
-  const data = generateData(config.trueParams, config.dataPoints);
+  const sanitizedConfig = sanitizeAlgorithmConfig(config);
+  const data = generateData(sanitizedConfig.trueParams, sanitizedConfig.dataPoints);
   return {
     phase: 'IDLE',
-    config,
+    config: sanitizedConfig,
     data,
-    currentParams: { ...config.priorParams },
+    currentParams: { ...sanitizedConfig.priorParams },
     proposedParams: null,
     stepResult: null,
     burnInSamples: [],
@@ -66,13 +68,13 @@ export function algorithmReducer(
       const proposed = propose(state.currentParams, state.config.proposalWidths);
       const lpCurrent = logPosterior(state.currentParams, state.data);
       const lpProposed = logPosterior(proposed, state.data);
-      const logRatio = lpProposed - lpCurrent;
+      const logRatio = logAcceptanceRatio(lpCurrent, lpProposed);
       const alpha = acceptanceProbability(lpCurrent, lpProposed);
 
       const invalidSigma = proposed.sigma <= 0;
       let msg: string;
       if (invalidSigma) {
-        msg = `Proposed sigma = ${proposed.sigma.toFixed(3)} < 0. Will be auto-rejected.`;
+        msg = `Proposed sigma = ${proposed.sigma.toFixed(3)} <= 0. Will be auto-rejected.`;
       } else if (alpha >= 1) {
         msg = `Acceptance probability = 100%. Posterior improved by ${Math.exp(logRatio).toFixed(2)}x.`;
       } else {

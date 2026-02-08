@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "npm run test:calculations",
+    "test:calculations": "mkdir -p tests/.tmp && npx esbuild src/engine/metropolis.ts --bundle --platform=node --format=cjs --outfile=tests/.tmp/metropolis.cjs && npx esbuild src/state/algorithm-state.ts --bundle --platform=node --format=cjs --outfile=tests/.tmp/algorithm-state.cjs && npx esbuild src/config/sanitize.ts --bundle --platform=node --format=cjs --outfile=tests/.tmp/sanitize.cjs && node --test tests/calculations.test.cjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

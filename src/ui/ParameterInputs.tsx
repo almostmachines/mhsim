@@ -1,4 +1,5 @@
 import type { AlgorithmConfig } from '../types';
+import { sanitizeAlgorithmConfig } from '../config/sanitize';
 
 interface ParameterInputsProps {
   config: AlgorithmConfig;
@@ -29,7 +30,19 @@ function NumberInput({
         value={value}
         step={step}
         min={min}
-        onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+        onChange={(e) => {
+          const raw = e.target.value;
+          if (raw.trim() === '') {
+            onChange(value);
+            return;
+          }
+          const parsed = Number(raw);
+          if (!Number.isFinite(parsed)) {
+            onChange(value);
+            return;
+          }
+          onChange(min !== undefined ? Math.max(min, parsed) : parsed);
+        }}
         disabled={disabled}
         className="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-200 text-right disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-cyan-500"
       />
@@ -43,7 +56,7 @@ export function ParameterInputs({
   disabled,
 }: ParameterInputsProps) {
   const update = (partial: Partial<AlgorithmConfig>) =>
-    onChange({ ...config, ...partial });
+    onChange(sanitizeAlgorithmConfig({ ...config, ...partial }));
 
   return (
     <div className="space-y-3">
