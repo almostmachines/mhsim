@@ -1,19 +1,15 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useCallback } from 'react';
 import * as THREE from 'three';
 import type { SampleRecord } from '../state/types';
 import type { Params } from '../types';
-import { normalize } from './SceneRoot';
+import { normalize, type ParameterBounds } from './scene-math';
 
 interface PointCloudProps {
   burnInSamples: SampleRecord[];
   acceptedSamples: SampleRecord[];
   maxBurnIn: number;
   maxAccepted: number;
-  bounds: {
-    slope: [number, number];
-    intercept: [number, number];
-    sigma: [number, number];
-  };
+  bounds: ParameterBounds;
 }
 const tempObject = new THREE.Object3D();
 const tempColor = new THREE.Color();
@@ -30,11 +26,14 @@ export function PointCloud({
   const burnInRef = useRef<THREE.InstancedMesh>(null);
   const acceptedRef = useRef<THREE.InstancedMesh>(null);
 
-  const toPos = (p: Params): [number, number, number] => [
-    normalize(p.slope, bounds.slope),
-    normalize(p.intercept, bounds.intercept),
-    normalize(p.sigma, bounds.sigma),
-  ];
+  const toPos = useCallback(
+    (p: Params): [number, number, number] => [
+      normalize(p.slope, bounds.slope),
+      normalize(p.intercept, bounds.intercept),
+      normalize(p.sigma, bounds.sigma),
+    ],
+    [bounds],
+  );
 
   // Update burn-in instances
   useEffect(() => {
@@ -53,7 +52,7 @@ export function PointCloud({
     mesh.count = burnInSamples.length;
     mesh.instanceMatrix.needsUpdate = true;
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  }, [burnInSamples, bounds]);
+  }, [burnInSamples, toPos]);
 
   // Update accepted instances with blue-to-purple gradient
   useEffect(() => {
@@ -76,7 +75,7 @@ export function PointCloud({
     mesh.count = total;
     mesh.instanceMatrix.needsUpdate = true;
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  }, [acceptedSamples, bounds]);
+  }, [acceptedSamples, toPos]);
 
   const sphereGeom = useMemo(
     () => new THREE.SphereGeometry(0.08, 8, 8),
