@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import type { AlgorithmConfig } from '../types';
 import type { AlgorithmState } from '../state/types';
 import { StepControls } from './StepControls';
 import { ParameterInputs } from './ParameterInputs';
+import { ResultsDisplay } from './ResultsDisplay';
 import { StatusDisplay } from './StatusDisplay';
 import { ProgressBar } from './ProgressBar';
 
@@ -31,6 +33,31 @@ export function ControlPanel({
     state.totalSteps > 0
       ? (state.acceptedCount / state.totalSteps) * 100
       : 0;
+
+  const estimates = useMemo(() => {
+    const samples = state.acceptedSamples;
+    if (samples.length < 2) return null;
+    const n = samples.length;
+    const mean = { slope: 0, intercept: 0, sigma: 0 };
+    for (const s of samples) {
+      mean.slope += s.params.slope;
+      mean.intercept += s.params.intercept;
+      mean.sigma += s.params.sigma;
+    }
+    mean.slope /= n;
+    mean.intercept /= n;
+    mean.sigma /= n;
+    const variance = { slope: 0, intercept: 0, sigma: 0 };
+    for (const s of samples) {
+      variance.slope += (s.params.slope - mean.slope) ** 2;
+      variance.intercept += (s.params.intercept - mean.intercept) ** 2;
+      variance.sigma += (s.params.sigma - mean.sigma) ** 2;
+    }
+    variance.slope /= n - 1;
+    variance.intercept /= n - 1;
+    variance.sigma /= n - 1;
+    return { mean, variance };
+  }, [state.acceptedSamples]);
 
   return (
     <div className="w-[340px] shrink-0 bg-slate-800/50 border-l border-slate-700 flex flex-col overflow-y-auto">
@@ -92,6 +119,10 @@ export function ControlPanel({
               Log ratio: {state.stepResult.logRatio.toFixed(4)}
             </div>
           </div>
+        )}
+
+        {estimates && (
+          <ResultsDisplay estimates={estimates} />
         )}
 
         <div className="border-t border-slate-700 pt-3">
