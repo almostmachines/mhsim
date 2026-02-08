@@ -198,6 +198,16 @@ export function algorithmReducer(
       const total = burnIn.length + accepted.length;
       const completed = total >= target;
       const rate = totalSteps > 0 ? ((acceptedCount / totalSteps) * 100).toFixed(1) : '0';
+      const stillBurning = burnIn.length < state.config.burnInSamples;
+
+      let statusMessage: string;
+      if (completed) {
+        statusMessage = `Sampling complete! Acceptance rate: ${rate}%`;
+      } else if (stillBurning) {
+        statusMessage = `Auto-running... ${burnIn.length}/${state.config.burnInSamples} burn-in steps`;
+      } else {
+        statusMessage = `Auto-running... ${accepted.length}/${state.config.totalSamples} samples (${rate}% accepted)`;
+      }
 
       return {
         ...state,
@@ -209,9 +219,7 @@ export function algorithmReducer(
         acceptedSamples: accepted,
         totalSteps,
         acceptedCount,
-        statusMessage: completed
-          ? `Sampling complete! Acceptance rate: ${rate}%`
-          : `Auto-running... ${total}/${target} samples (${rate}% accepted)`,
+        statusMessage,
         statusType: completed ? 'success' : 'info',
       };
     }

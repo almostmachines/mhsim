@@ -62,6 +62,15 @@ export default function App() {
     dispatch({ type: 'RESET', config });
   }, [config]);
 
+  // Auto-reset when config changes
+  const configRef = useRef(config);
+  useEffect(() => {
+    if (configRef.current !== config) {
+      configRef.current = config;
+      handleReset();
+    }
+  }, [config, handleReset]);
+
   return (
     <div className="h-screen flex flex-col bg-slate-900">
       <header className="shrink-0 px-4 py-3 border-b border-slate-700 bg-slate-800/50">
