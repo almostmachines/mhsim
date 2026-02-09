@@ -127,6 +127,34 @@ export function ParameterInputs({
         />
       </Section>
 
+      <Section title="Initial Hypothesis">
+        <NumberInput
+          label="Slope"
+          value={config.initialParams.slope}
+          onChange={(v) =>
+            update({ initialParams: { ...config.initialParams, slope: v } })
+          }
+          disabled={disabled}
+        />
+        <NumberInput
+          label="Intercept"
+          value={config.initialParams.intercept}
+          onChange={(v) =>
+            update({ initialParams: { ...config.initialParams, intercept: v } })
+          }
+          disabled={disabled}
+        />
+        <NumberInput
+          label="Sigma"
+          value={config.initialParams.sigma}
+          onChange={(v) =>
+            update({ initialParams: { ...config.initialParams, sigma: v } })
+          }
+          disabled={disabled}
+          min={0.01}
+        />
+      </Section>
+
       <Section title="Proposal Widths">
         <NumberInput
           label="Slope"

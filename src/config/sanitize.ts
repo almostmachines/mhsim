@@ -27,6 +27,7 @@ export function sanitizeAlgorithmConfig(config: AlgorithmConfig): AlgorithmConfi
     dataPoints: boundedInteger(config.dataPoints, DEFAULT_CONFIG.dataPoints, 1),
     trueParams: sanitizeParams(config.trueParams, DEFAULT_CONFIG.trueParams, MIN_SIGMA),
     priorParams: sanitizeParams(config.priorParams, DEFAULT_CONFIG.priorParams, MIN_SIGMA),
+    initialParams: sanitizeParams(config.initialParams, DEFAULT_CONFIG.initialParams, MIN_SIGMA),
     proposalWidths: {
       slope: Math.max(
         MIN_PROPOSAL_WIDTH,

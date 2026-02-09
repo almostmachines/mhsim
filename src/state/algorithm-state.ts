@@ -12,7 +12,7 @@ export function createInitialState(config: AlgorithmConfig): AlgorithmState {
     phase: 'IDLE',
     config: sanitizedConfig,
     data,
-    currentParams: { ...sanitizedConfig.priorParams },
+    currentParams: { ...sanitizedConfig.initialParams },
     proposedParams: null,
     stepResult: null,
     burnInSamples: [],

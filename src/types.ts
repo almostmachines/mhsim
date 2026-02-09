@@ -15,6 +15,7 @@ export interface AlgorithmConfig {
   dataPoints: number;
   trueParams: Params;
   priorParams: Params;
+  initialParams: Params;
   proposalWidths: Params;
 }
 
@@ -24,5 +25,6 @@ export const DEFAULT_CONFIG: AlgorithmConfig = {
   dataPoints: 50,
   trueParams: { slope: 2.5, intercept: 5.0, sigma: 3.0 },
   priorParams: { slope: 0.0, intercept: 0.0, sigma: 5.0 },
+  initialParams: { slope: 0.0, intercept: 0.0, sigma: 5.0 },
   proposalWidths: { slope: 0.3, intercept: 1.0, sigma: 0.5 },
 };

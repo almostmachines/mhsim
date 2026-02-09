@@ -15,6 +15,7 @@ function makeConfig(overrides = {}) {
     dataPoints: 5,
     trueParams: { slope: 2.5, intercept: 5, sigma: 3 },
     priorParams: { slope: 0, intercept: 0, sigma: 5 },
+    initialParams: { slope: 0, intercept: 0, sigma: 5 },
     proposalWidths: { slope: 0.3, intercept: 1, sigma: 0.5 },
     ...overrides,
   };
@@ -39,6 +40,7 @@ test('sanitizeAlgorithmConfig clamps and rounds invalid numeric values', () => {
     dataPoints: Number.NaN,
     trueParams: { slope: Number.POSITIVE_INFINITY, intercept: Number.NaN, sigma: -3 },
     priorParams: { slope: 1, intercept: 2, sigma: 0 },
+    initialParams: { slope: 1, intercept: 2, sigma: 0 },
     proposalWidths: { slope: 0, intercept: Number.NaN, sigma: -1 },
   });
 
@@ -51,6 +53,7 @@ test('sanitizeAlgorithmConfig clamps and rounds invalid numeric values', () => {
   assert.equal(clean.trueParams.intercept, 5);
   assert.equal(clean.trueParams.sigma, 0.01);
   assert.equal(clean.priorParams.sigma, 0.01);
+  assert.equal(clean.initialParams.sigma, 0.01);
   assert.equal(clean.proposalWidths.slope, 0.01);
   assert.equal(clean.proposalWidths.intercept, 1);
   assert.equal(clean.proposalWidths.sigma, 0.01);
@@ -62,11 +65,13 @@ test('createInitialState applies sanitization before generating data', () => {
       dataPoints: -10,
       trueParams: { slope: 2, intercept: 3, sigma: 0 },
       priorParams: { slope: 1, intercept: 2, sigma: -9 },
+      initialParams: { slope: 1, intercept: 2, sigma: -9 },
     }),
   );
 
   assert.equal(state.config.dataPoints, 1);
   assert.equal(state.config.trueParams.sigma, 0.01);
+  assert.equal(state.config.initialParams.sigma, 0.01);
   assert.equal(state.currentParams.sigma, 0.01);
   assert.equal(state.data.length, 1);
 });
