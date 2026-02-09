@@ -46,7 +46,7 @@ test('sanitizeAlgorithmConfig clamps and rounds invalid numeric values', () => {
 
   assert.equal(clean.totalSamples, 1);
   assert.equal(clean.burnInSamples, 0);
-  assert.equal(clean.dataPoints, 30);
+  assert.equal(clean.dataPoints, 50);
   assert.equal(clean.trueParams.slope, 2.5);
   assert.equal(clean.trueParams.intercept, 5);
   assert.equal(clean.trueParams.sigma, 0.01);

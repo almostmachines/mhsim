@@ -19,9 +19,9 @@ export interface AlgorithmConfig {
 }
 
 export const DEFAULT_CONFIG: AlgorithmConfig = {
-  totalSamples: 500,
-  burnInSamples: 50,
-  dataPoints: 30,
+  totalSamples: 1000,
+  burnInSamples: 0,
+  dataPoints: 50,
   trueParams: { slope: 2.5, intercept: 5.0, sigma: 3.0 },
   priorParams: { slope: 0.0, intercept: 0.0, sigma: 5.0 },
   proposalWidths: { slope: 0.3, intercept: 1.0, sigma: 0.5 },
