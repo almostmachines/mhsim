@@ -76,6 +76,39 @@ test('createInitialState applies sanitization before generating data', () => {
   assert.equal(state.data.length, 1);
 });
 
+test('NEXT_STEP uses configured prior belief means', () => {
+  const state = createInitialState(makeConfig());
+  const current = { slope: 6, intercept: -8, sigma: 4 };
+  const base = {
+    ...state,
+    currentParams: current,
+    data: [],
+    config: {
+      ...state.config,
+      proposalWidths: { slope: 0, intercept: 0, sigma: 0 },
+    },
+  };
+
+  const nearPrior = algorithmReducer(
+    {
+      ...base,
+      config: { ...base.config, priorParams: { ...current } },
+    },
+    { type: 'NEXT_STEP' },
+  );
+  const farPrior = algorithmReducer(
+    {
+      ...base,
+      config: { ...base.config, priorParams: { slope: 0, intercept: 0, sigma: 5 } },
+    },
+    { type: 'NEXT_STEP' },
+  );
+
+  assert.ok(nearPrior.stepResult);
+  assert.ok(farPrior.stepResult);
+  assert.ok(nearPrior.stepResult.logPosteriorCurrent > farPrior.stepResult.logPosteriorCurrent);
+});
+
 test('NEXT_STEP keeps diagnostics numeric when both posteriors are impossible', () => {
   const state = createInitialState(makeConfig());
   const poisoned = {

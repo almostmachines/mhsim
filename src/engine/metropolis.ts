@@ -57,10 +57,11 @@ export function step(
   current: Params,
   data: DataPoint[],
   widths: Params,
+  priorMeans: Params,
 ): StepResult {
   const proposed = propose(current, widths);
-  const lpCurrent = logPosterior(current, data);
-  const lpProposed = logPosterior(proposed, data);
+  const lpCurrent = logPosterior(current, data, priorMeans);
+  const lpProposed = logPosterior(proposed, data, priorMeans);
   const logRatio = logAcceptanceRatio(lpCurrent, lpProposed);
   const alpha = acceptanceProbability(lpCurrent, lpProposed);
   const u = Math.random();

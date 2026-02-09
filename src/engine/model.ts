@@ -1,6 +1,13 @@
 import type { DataPoint, Params } from '../types';
 
 const LOG_2PI = Math.log(2 * Math.PI);
+const MIN_SIGMA = 0.01;
+const MAX_SIGMA = 50;
+const PRIOR_STD = {
+  slope: 10,
+  intercept: 20,
+  sigma: 10,
+} as const;
 
 /** Log of the normal PDF */
 function logNormalPdf(x: number, mean: number, std: number): number {
@@ -19,23 +26,20 @@ export function logLikelihood(params: Params, data: DataPoint[]): number {
   return ll;
 }
 
-/** Log-prior: Normal priors on slope/intercept, Uniform(0.01, 50) on sigma */
-export function logPrior(params: Params): number {
-  if (params.sigma <= 0.01 || params.sigma > 50) return -Infinity;
+/** Log-prior: independent normals centered at configured prior belief means */
+export function logPrior(params: Params, priorMeans: Params): number {
+  if (params.sigma <= MIN_SIGMA || params.sigma > MAX_SIGMA) return -Infinity;
 
-  // Normal(0, 10) prior on slope
-  const lpSlope = logNormalPdf(params.slope, 0, 10);
-  // Normal(0, 20) prior on intercept
-  const lpIntercept = logNormalPdf(params.intercept, 0, 20);
-  // Uniform(0.01, 50) on sigma => log(1 / (50 - 0.01)) = constant
-  const lpSigma = -Math.log(50 - 0.01);
+  const lpSlope = logNormalPdf(params.slope, priorMeans.slope, PRIOR_STD.slope);
+  const lpIntercept = logNormalPdf(params.intercept, priorMeans.intercept, PRIOR_STD.intercept);
+  const lpSigma = logNormalPdf(params.sigma, priorMeans.sigma, PRIOR_STD.sigma);
 
   return lpSlope + lpIntercept + lpSigma;
 }
 
 /** Log-posterior = log-likelihood + log-prior */
-export function logPosterior(params: Params, data: DataPoint[]): number {
-  const lp = logPrior(params);
+export function logPosterior(params: Params, data: DataPoint[], priorMeans: Params): number {
+  const lp = logPrior(params, priorMeans);
   if (lp === -Infinity) return -Infinity;
   return logLikelihood(params, data) + lp;
 }

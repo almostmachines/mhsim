@@ -66,8 +66,8 @@ export function algorithmReducer(
       }
 
       const proposed = propose(state.currentParams, state.config.proposalWidths);
-      const lpCurrent = logPosterior(state.currentParams, state.data);
-      const lpProposed = logPosterior(proposed, state.data);
+      const lpCurrent = logPosterior(state.currentParams, state.data, state.config.priorParams);
+      const lpProposed = logPosterior(proposed, state.data, state.config.priorParams);
       const logRatio = logAcceptanceRatio(lpCurrent, lpProposed);
       const alpha = acceptanceProbability(lpCurrent, lpProposed);
 
@@ -181,7 +181,12 @@ export function algorithmReducer(
       for (let i = 0; i < batchSize; i++) {
         if (burnIn.length + accepted.length >= target) break;
 
-        const result = step(current, state.data, state.config.proposalWidths);
+        const result = step(
+          current,
+          state.data,
+          state.config.proposalWidths,
+          state.config.priorParams,
+        );
         current = result.newParams;
 
         const isBurn = burnIn.length < state.config.burnInSamples;

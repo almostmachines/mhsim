@@ -58,7 +58,7 @@ The blue-to-purple gradient reflects sampling order, making it easy to see how t
 
 - **Data**: `y_i = slope * x_i + intercept + Normal(0, sigma)` with `x_i ~ Uniform(0, 10)`
 - **Likelihood**: Normal log-likelihood, computed entirely in log-space
-- **Priors**: Normal(0, 10) on slope, Normal(0, 20) on intercept, Uniform(0.01, 50) on sigma
+- **Priors**: independent normals centered at the **Prior Belief** settings (std devs fixed at 10 for slope, 20 for intercept, 10 for sigma), with sigma constrained to `(0.01, 50]`
 - **Proposal**: Symmetric normal perturbation with configurable widths per parameter
 - **Acceptance**: `alpha = min(1, exp(log_posterior_proposed - log_posterior_current))`
 
