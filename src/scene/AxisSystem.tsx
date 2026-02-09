@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
+import axisFontUrl from 'three/examples/fonts/ttf/kenpixel.ttf?url';
 
 interface AxisSystemProps {
   bounds: {
@@ -49,6 +50,7 @@ export function AxisSystem({ bounds }: AxisSystemProps) {
           fontSize={0.4}
           color="#ef4444"
           anchorX="center"
+          font={axisFontUrl}
         >
           slope
         </Text>
@@ -61,6 +63,7 @@ export function AxisSystem({ bounds }: AxisSystemProps) {
               fontSize={0.25}
               color="#94a3b8"
               anchorX="center"
+              font={axisFontUrl}
             >
               {formatTick(val)}
             </Text>
@@ -80,6 +83,7 @@ export function AxisSystem({ bounds }: AxisSystemProps) {
           color="#22c55e"
           anchorX="center"
           rotation={[0, 0, Math.PI / 2]}
+          font={axisFontUrl}
         >
           intercept
         </Text>
@@ -92,6 +96,7 @@ export function AxisSystem({ bounds }: AxisSystemProps) {
               fontSize={0.25}
               color="#94a3b8"
               anchorX="right"
+              font={axisFontUrl}
             >
               {formatTick(val)}
             </Text>
@@ -110,6 +115,7 @@ export function AxisSystem({ bounds }: AxisSystemProps) {
           fontSize={0.4}
           color="#3b82f6"
           anchorX="center"
+          font={axisFontUrl}
         >
           sigma
         </Text>
@@ -122,6 +128,7 @@ export function AxisSystem({ bounds }: AxisSystemProps) {
               fontSize={0.25}
               color="#94a3b8"
               anchorX="right"
+              font={axisFontUrl}
             >
               {formatTick(val)}
             </Text>
