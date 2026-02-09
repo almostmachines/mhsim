@@ -122,7 +122,11 @@ export function ControlPanel({
         )}
 
         {estimates && (
-          <ResultsDisplay estimates={estimates} />
+          <ResultsDisplay
+            estimates={estimates}
+            data={state.data}
+            trueParams={state.config.trueParams}
+          />
         )}
 
         <div className="border-t border-slate-700 pt-3">
