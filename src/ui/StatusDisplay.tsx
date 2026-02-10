@@ -21,7 +21,7 @@ export function StatusDisplay({
   return (
     <div className="space-y-2">
       <div
-        className={`border rounded-lg px-3 py-2 text-sm ${typeStyles[type]}`}
+        className={`border rounded-lg px-3 py-2 text-xs ${typeStyles[type]}`}
       >
         {message}
       </div>
