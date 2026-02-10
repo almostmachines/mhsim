@@ -27,7 +27,7 @@ export function logLikelihood(params: Params, data: DataPoint[]): number {
 
 /** Log-prior: independent normals centered at configured prior belief means */
 export function logPrior(params: Params, priorMeans: Params): number {
-  if (params.sigma <= MIN_SIGMA) return -Infinity;
+  if (params.sigma < MIN_SIGMA) return -Infinity;
 
   const lpSlope = logNormalPdf(params.slope, priorMeans.slope, PRIOR_STD.slope);
   const lpIntercept = logNormalPdf(params.intercept, priorMeans.intercept, PRIOR_STD.intercept);

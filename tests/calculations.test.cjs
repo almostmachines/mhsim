@@ -127,3 +127,28 @@ test('NEXT_STEP keeps diagnostics numeric when both posteriors are impossible', 
   assert.equal(Number.isNaN(next.stepResult.logRatio), false);
   assert.equal(next.statusMessage.includes('NaN'), false);
 });
+
+test('NEXT_STEP treats sigma = 0.01 as valid prior support', () => {
+  const state = createInitialState(
+    makeConfig({
+      priorParams: { slope: 0, intercept: 0, sigma: 0.01 },
+      initialParams: { slope: 0, intercept: 0, sigma: 0.01 },
+    }),
+  );
+
+  const next = algorithmReducer(
+    {
+      ...state,
+      data: [],
+      config: {
+        ...state.config,
+        proposalWidths: { slope: 0, intercept: 0, sigma: 0 },
+      },
+    },
+    { type: 'NEXT_STEP' },
+  );
+
+  assert.ok(next.stepResult);
+  assert.equal(Number.isFinite(next.stepResult.logPosteriorCurrent), true);
+  assert.equal(next.stepResult.logPosteriorCurrent, next.stepResult.logPosteriorProposed);
+});
