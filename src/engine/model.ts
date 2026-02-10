@@ -2,7 +2,6 @@ import type { DataPoint, Params } from '../types';
 
 const LOG_2PI = Math.log(2 * Math.PI);
 const MIN_SIGMA = 0.01;
-const MAX_SIGMA = 50;
 const PRIOR_STD = {
   slope: 10,
   intercept: 20,
@@ -28,7 +27,7 @@ export function logLikelihood(params: Params, data: DataPoint[]): number {
 
 /** Log-prior: independent normals centered at configured prior belief means */
 export function logPrior(params: Params, priorMeans: Params): number {
-  if (params.sigma <= MIN_SIGMA || params.sigma > MAX_SIGMA) return -Infinity;
+  if (params.sigma <= MIN_SIGMA) return -Infinity;
 
   const lpSlope = logNormalPdf(params.slope, priorMeans.slope, PRIOR_STD.slope);
   const lpIntercept = logNormalPdf(params.intercept, priorMeans.intercept, PRIOR_STD.intercept);
