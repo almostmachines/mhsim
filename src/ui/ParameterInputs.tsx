@@ -100,31 +100,64 @@ export function ParameterInputs({
       </Section>
 
       <Section title="Prior Belief">
-        <NumberInput
-          label="Slope"
-          value={config.priorParams.slope}
-          onChange={(v) =>
-            update({ priorParams: { ...config.priorParams, slope: v } })
-          }
-          disabled={disabled}
-        />
-        <NumberInput
-          label="Intercept"
-          value={config.priorParams.intercept}
-          onChange={(v) =>
-            update({ priorParams: { ...config.priorParams, intercept: v } })
-          }
-          disabled={disabled}
-        />
-        <NumberInput
-          label="Sigma"
-          value={config.priorParams.sigma}
-          onChange={(v) =>
-            update({ priorParams: { ...config.priorParams, sigma: v } })
-          }
-          disabled={disabled}
-          min={0.01}
-        />
+        <div className="flex-1 min-w-0 space-y-2">
+          <NumberInput
+            label="Slope"
+            value={config.priorParams.slope}
+            onChange={(v) =>
+              update({ priorParams: { ...config.priorParams, slope: v } })
+            }
+            disabled={disabled}
+          />
+          <NumberInput
+            label="Slope σ"
+            value={config.priorStdDevs.slope}
+            onChange={(v) =>
+              update({ priorStdDevs: { ...config.priorStdDevs, slope: v } })
+            }
+            disabled={disabled}
+            min={0.01}
+          />
+        </div>
+        <div className="flex-1 min-w-0 space-y-2">
+          <NumberInput
+            label="Intercept"
+            value={config.priorParams.intercept}
+            onChange={(v) =>
+              update({ priorParams: { ...config.priorParams, intercept: v } })
+            }
+            disabled={disabled}
+          />
+          <NumberInput
+            label="Intercept σ"
+            value={config.priorStdDevs.intercept}
+            onChange={(v) =>
+              update({ priorStdDevs: { ...config.priorStdDevs, intercept: v } })
+            }
+            disabled={disabled}
+            min={0.01}
+          />
+        </div>
+        <div className="flex-1 min-w-0 space-y-2">
+          <NumberInput
+            label="Sigma"
+            value={config.priorParams.sigma}
+            onChange={(v) =>
+              update({ priorParams: { ...config.priorParams, sigma: v } })
+            }
+            disabled={disabled}
+            min={0.01}
+          />
+          <NumberInput
+            label="Sigma σ"
+            value={config.priorStdDevs.sigma}
+            onChange={(v) =>
+              update({ priorStdDevs: { ...config.priorStdDevs, sigma: v } })
+            }
+            disabled={disabled}
+            min={0.01}
+          />
+        </div>
       </Section>
 
       <Section title="Initial Hypothesis">

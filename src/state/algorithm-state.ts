@@ -66,8 +66,18 @@ export function algorithmReducer(
       }
 
       const proposed = propose(state.currentParams, state.config.proposalWidths);
-      const lpCurrent = logPosterior(state.currentParams, state.data, state.config.priorParams);
-      const lpProposed = logPosterior(proposed, state.data, state.config.priorParams);
+      const lpCurrent = logPosterior(
+        state.currentParams,
+        state.data,
+        state.config.priorParams,
+        state.config.priorStdDevs,
+      );
+      const lpProposed = logPosterior(
+        proposed,
+        state.data,
+        state.config.priorParams,
+        state.config.priorStdDevs,
+      );
       const logRatio = logAcceptanceRatio(lpCurrent, lpProposed);
       const alpha = acceptanceProbability(lpCurrent, lpProposed);
 
@@ -186,6 +196,7 @@ export function algorithmReducer(
           state.data,
           state.config.proposalWidths,
           state.config.priorParams,
+          state.config.priorStdDevs,
         );
         current = result.newParams;
 

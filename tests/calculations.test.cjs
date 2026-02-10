@@ -15,6 +15,7 @@ function makeConfig(overrides = {}) {
     dataPoints: 5,
     trueParams: { slope: 2.5, intercept: 5, sigma: 3 },
     priorParams: { slope: 0, intercept: 0, sigma: 5 },
+    priorStdDevs: { slope: 10, intercept: 20, sigma: 10 },
     initialParams: { slope: 0, intercept: 0, sigma: 5 },
     proposalWidths: { slope: 0.3, intercept: 1, sigma: 0.5 },
     ...overrides,
@@ -40,6 +41,7 @@ test('sanitizeAlgorithmConfig clamps and rounds invalid numeric values', () => {
     dataPoints: Number.NaN,
     trueParams: { slope: Number.POSITIVE_INFINITY, intercept: Number.NaN, sigma: -3 },
     priorParams: { slope: 1, intercept: 2, sigma: 0 },
+    priorStdDevs: { slope: 0, intercept: Number.NaN, sigma: -7 },
     initialParams: { slope: 1, intercept: 2, sigma: 0 },
     proposalWidths: { slope: 0, intercept: Number.NaN, sigma: -1 },
   });
@@ -53,6 +55,9 @@ test('sanitizeAlgorithmConfig clamps and rounds invalid numeric values', () => {
   assert.equal(clean.trueParams.intercept, 5);
   assert.equal(clean.trueParams.sigma, 0.01);
   assert.equal(clean.priorParams.sigma, 0.01);
+  assert.equal(clean.priorStdDevs.slope, 0.01);
+  assert.equal(clean.priorStdDevs.intercept, 20);
+  assert.equal(clean.priorStdDevs.sigma, 0.01);
   assert.equal(clean.initialParams.sigma, 0.01);
   assert.equal(clean.proposalWidths.slope, 0.01);
   assert.equal(clean.proposalWidths.intercept, 1);
@@ -107,6 +112,46 @@ test('NEXT_STEP uses configured prior belief means', () => {
   assert.ok(nearPrior.stepResult);
   assert.ok(farPrior.stepResult);
   assert.ok(nearPrior.stepResult.logPosteriorCurrent > farPrior.stepResult.logPosteriorCurrent);
+});
+
+test('NEXT_STEP uses configured prior belief standard deviations', () => {
+  const state = createInitialState(makeConfig());
+  const current = { slope: 6, intercept: -8, sigma: 4 };
+  const base = {
+    ...state,
+    currentParams: current,
+    data: [],
+    config: {
+      ...state.config,
+      priorParams: { slope: 0, intercept: 0, sigma: 5 },
+      proposalWidths: { slope: 0, intercept: 0, sigma: 0 },
+    },
+  };
+
+  const widePriorStd = algorithmReducer(
+    {
+      ...base,
+      config: {
+        ...base.config,
+        priorStdDevs: { slope: 100, intercept: 100, sigma: 100 },
+      },
+    },
+    { type: 'NEXT_STEP' },
+  );
+  const narrowPriorStd = algorithmReducer(
+    {
+      ...base,
+      config: {
+        ...base.config,
+        priorStdDevs: { slope: 0.1, intercept: 0.1, sigma: 0.1 },
+      },
+    },
+    { type: 'NEXT_STEP' },
+  );
+
+  assert.ok(widePriorStd.stepResult);
+  assert.ok(narrowPriorStd.stepResult);
+  assert.ok(widePriorStd.stepResult.logPosteriorCurrent > narrowPriorStd.stepResult.logPosteriorCurrent);
 });
 
 test('NEXT_STEP keeps diagnostics numeric when both posteriors are impossible', () => {
