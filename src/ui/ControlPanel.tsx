@@ -56,11 +56,30 @@ export function ControlPanel({
     variance.slope /= n - 1;
     variance.intercept /= n - 1;
     variance.sigma /= n - 1;
-    return { mean, variance };
+
+    const percentile = (sorted: number[], p: number) => {
+      const idx = (p / 100) * (sorted.length - 1);
+      const lo = Math.floor(idx);
+      const hi = Math.ceil(idx);
+      if (lo === hi) return sorted[lo];
+      return sorted[lo] + (idx - lo) * (sorted[hi] - sorted[lo]);
+    };
+
+    const slopeVals = samples.map(s => s.params.slope).sort((a, b) => a - b);
+    const interceptVals = samples.map(s => s.params.intercept).sort((a, b) => a - b);
+    const sigmaVals = samples.map(s => s.params.sigma).sort((a, b) => a - b);
+
+    const ci95 = {
+      slope: [percentile(slopeVals, 2.5), percentile(slopeVals, 97.5)] as [number, number],
+      intercept: [percentile(interceptVals, 2.5), percentile(interceptVals, 97.5)] as [number, number],
+      sigma: [percentile(sigmaVals, 2.5), percentile(sigmaVals, 97.5)] as [number, number],
+    };
+
+    return { mean, variance, ci95 };
   }, [state.acceptedSamples]);
 
   return (
-    <div className="w-full md:w-[340px] shrink-0 bg-slate-800/50 border-t md:border-t-0 md:border-l border-slate-700 flex flex-col overflow-y-auto">
+    <div className="w-full md:w-[420px] shrink-0 bg-slate-800/50 border-t md:border-t-0 md:border-l border-slate-700 flex flex-col overflow-y-auto">
       <div className="p-4 space-y-4">
         <StepControls
           phase={state.phase}
