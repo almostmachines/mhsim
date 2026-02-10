@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { AlgorithmConfig } from '../types';
+import { DEFAULT_CONFIG, type AlgorithmConfig } from '../types';
 import type { AlgorithmState } from '../state/types';
 import { StepControls } from './StepControls';
 import { ParameterInputs } from './ParameterInputs';
@@ -149,9 +149,19 @@ export function ControlPanel({
         )}
 
         <div className="border-t border-slate-700 pt-3">
-          <h2 className="text-sm font-semibold text-slate-300 mb-3">
-            Settings
-          </h2>
+          <div className="flex items-center gap-3 mb-3">
+            <h2 className="text-sm font-semibold text-slate-300">
+              Settings
+            </h2>
+            <button
+              onClick={() => onConfigChange(DEFAULT_CONFIG)}
+              disabled={notIdle}
+              className="text-xs text-slate-500 hover:text-slate-300 border border-slate-600 rounded px-1.5 py-0.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              title="Reset settings to defaults"
+            >
+              Reset
+            </button>
+          </div>
           <ParameterInputs
             config={config}
             onChange={onConfigChange}
