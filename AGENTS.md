@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Description
-Interactive 3D visualization of Metropolis-Hastings MCMC applied to Bayesian linear regression (slope, intercept, sigma). React + TypeScript + Vite, with react-three-fiber for 3D and Tailwind CSS v4.
+Interactive 3D visualization of Metropolis algorithm MCMC applied to Bayesian linear regression (slope, intercept, sigma). React + TypeScript + Vite, with react-three-fiber for 3D and Tailwind CSS v4.
 
 ## Project Structure & Module Organization
 Core code lives in `src/` and is split by responsibility:

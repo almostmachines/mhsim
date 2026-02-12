@@ -75,7 +75,7 @@ export default function App() {
     <div className="h-screen flex flex-col bg-slate-900">
       <header className="shrink-0 px-4 py-3 border-b border-slate-700 bg-slate-800/50">
         <h1 className="text-lg font-bold text-slate-100">
-          Metropolis-Hastings Linear Regression
+          Metropolis Algorithm: Bayesian Linear Regression
         </h1>
         <p className="text-xs text-slate-500">
           Bayesian Linear Regression: slope, intercept, sigma

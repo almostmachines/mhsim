@@ -1,12 +1,12 @@
-# Metropolis-Hastings Linear Regression
+# Metropolis Algorithm Linear Regression
 
-An interactive 3D visualization of the Metropolis-Hastings algorithm applied to Bayesian linear regression. Watch the posterior distribution being constructed one sample at a time, see proposals accepted or rejected, and observe the chain converge to the true mode.
+An interactive 3D visualization of the Metropolis algorithm applied to Bayesian linear regression. Watch the posterior distribution being constructed one sample at a time, see proposals accepted or rejected, and observe the chain converge to the true mode.
 
 ![Screenshot of the explorer after 500 samples, showing the point cloud clustered around the true mode](screenshot.jpg)
 
 ## What it does
 
-The app fits a Bayesian linear regression model with three parameters — **slope**, **intercept**, and **sigma** (noise standard deviation) — using the Metropolis-Hastings MCMC algorithm. You start from a deliberately wrong initial guess and watch the chain explore parameter space until it finds the region of highest posterior density.
+The app fits a Bayesian linear regression model with three parameters — **slope**, **intercept**, and **sigma** (noise standard deviation) — using the Metropolis MCMC algorithm. You start from a deliberately wrong initial guess and watch the chain explore parameter space until it finds the region of highest posterior density.
 
 **Step-by-step mode** lets you see each proposal individually:
 

@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture
 
-Interactive 3D visualization of Metropolis-Hastings MCMC applied to Bayesian linear regression (slope, intercept, sigma). React + TypeScript + Vite, with react-three-fiber for 3D and Tailwind CSS v4.
+Interactive 3D visualization of Metropolis MCMC applied to Bayesian linear regression (slope, intercept, sigma). React + TypeScript + Vite, with react-three-fiber for 3D and Tailwind CSS v4.
 
 ### Layer separation
 

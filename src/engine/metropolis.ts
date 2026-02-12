@@ -52,7 +52,7 @@ export function acceptanceProbability(
   return Number.isFinite(alpha) ? Math.min(1, alpha) : 0;
 }
 
-/** Run one complete Metropolis-Hastings step */
+/** Run one complete Metropolis algorithm step */
 export function step(
   current: Params,
   data: DataPoint[],
