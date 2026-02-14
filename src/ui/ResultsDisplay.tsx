@@ -206,38 +206,26 @@ export function ResultsDisplay({ estimates, data, trueParams }: ResultsDisplayPr
           <thead>
             <tr className="text-slate-500">
               <th className="text-left font-medium pr-2 pb-1"></th>
-              {reportItems.map((item) => (
-                <th key={item.label} className="text-right font-medium pb-1 pl-2">
-                  {item.label}
-                </th>
-              ))}
+              <th className="text-right font-medium pb-1 pl-2">Estimated</th>
+              <th className="text-right font-medium pb-1 pl-2">95% CI</th>
+              <th className="text-right font-medium pb-1 pl-2">True</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="text-slate-400 pr-2 py-0.5">Estimated</td>
-              {reportItems.map((item) => (
-                <td key={item.label} className="text-right text-cyan-300 pl-2 py-0.5">
+            {reportItems.map((item, i) => (
+              <tr key={item.label} className={i > 0 ? 'border-t border-slate-800' : ''}>
+                <td className="text-slate-400 pr-2 py-0.5">{item.label}</td>
+                <td className="text-right text-cyan-300 pl-2 py-0.5">
                   {item.mean.toFixed(3)}
                 </td>
-              ))}
-            </tr>
-            <tr>
-              <td className="text-slate-400 pr-2 py-0.5">95% CI</td>
-              {reportItems.map((item) => (
-                <td key={item.label} className="text-right text-slate-400 pl-2 py-0.5 whitespace-nowrap text-[11px]">
+                <td className="text-right text-slate-400 pl-2 py-0.5 whitespace-nowrap text-[11px]">
                   <span className="text-slate-500">[</span>{item.ci[0].toFixed(2)}, {item.ci[1].toFixed(2)}<span className="text-slate-500">]</span>
                 </td>
-              ))}
-            </tr>
-            <tr className="border-t border-slate-800">
-              <td className="text-slate-400 pr-2 py-0.5 pt-1">True</td>
-              {reportItems.map((item) => (
-                <td key={item.label} className="text-right text-amber-400 pl-2 py-0.5 pt-1">
+                <td className="text-right text-amber-400 pl-2 py-0.5">
                   {item.trueValue.toFixed(3)}
                 </td>
-              ))}
-            </tr>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
